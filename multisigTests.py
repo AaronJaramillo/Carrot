@@ -19,19 +19,29 @@ def main():
 	imgFile.close()
 	im = Image.open('addyImage.png')
 	im.show()
+	datafy(player1)
+
+
+def datafy(player1):
 	repCounter = 0
-	arduino = serial.Serial('/dev/cu.usbmodem1421', 9600, timeout=.1)
+	arduino = serial.Serial('/dev/cu.usbmodem1421', 9600, timeout=.5)
 	repLevel = 4.8
-	while True:
+	data = 0
+	while repCounter <= player1.goal:
+		data = arduino.readline()[:-2] #the last bit gets rid of the new-line chars
+		if data:
+
+			print(repCounter)
+			if data >= repLevel:
+				repCounter += 1
+				hold(arduino, data)
+			if repCounter == player1.goal:
+				player1.Winning()
+def hold(arduino, data):
+	while data > 1:
 		data = arduino.readline()[:-2] #the last bit gets rid of the new-line chars
 		if data:
 			print(data)
-			if data >= repLevel:
-				repCounter += 1
-		if repCounter == player1.goal:
-			player1.Winning()
-
-
 
 
 	#print(player1.activity, player1.wager, player1.goal)
@@ -71,6 +81,7 @@ class Player:
 		# worked2 = verify_tx_input(tx, 0, lockingScript, signedmulti2, hardwarePubkey)
 		keys = [self.signedmulti1, signedmulti2]
 		txDone = apply_multisignatures(self.tx, 0, self.lockingScript, keys)
+		print("Congrats On Hitting Your Goal")
 
 	def userAccount(self):
 		self.userKey = '612477b03a3c06a3eed7feb2e94f0611ce7a246b192fda760ce642d57f58c59b'
