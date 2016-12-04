@@ -34,14 +34,14 @@ def datafy(player1):
 			print(repCounter)
 			if data >= repLevel:
 				repCounter += 1
-				hold(arduino, data)
+				#hold(arduino, data)
 			if repCounter == player1.goal:
 				player1.Winning()
 def hold(arduino, data):
 	while data > 1:
 		data = arduino.readline()[:-2] #the last bit gets rid of the new-line chars
-		if data:
-			print(data)
+		
+			#print(data)
 
 
 	#print(player1.activity, player1.wager, player1.goal)
